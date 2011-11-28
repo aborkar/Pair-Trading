@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ public class PairTrading {
 
     //TODO: Max holding period defn
     int pairingInterval = 400;int tradingWindow=401;int pairComputingFrequency = 5;double tradingThreshold=1.5;
-    int maxPeriod = 5; int correlationStrategy=CORRELATION_METHODOLOGY_LINEAR_REGRESSION;
+    int maxPeriod = 5; int correlationStrategy=CORRELATION_METHODOLOGY_MIN_SQRD_DIST;
     int numberOfTrades=0;
     ArrayList<Trade> tradesContainer;
     ArrayList<DoubleMatrix> pairsSet;
@@ -41,7 +42,7 @@ public class PairTrading {
     public PairTrading(){
         //load the matrix
         try{
-            dailyTradePrices = DoubleMatrix.loadAsciiFile("C:\\Users\\Sara\\my_data2.out");
+            dailyTradePrices = DoubleMatrix.loadAsciiFile("C:\\Users\\Sara\\my_data4.txt");
             //dailyTradePrices = loadFile("C:\\Users\\Sara\\Stocks394.csv");//DoubleMatrix.loadAsciiFile("C:\\Users\\Sara\\Stocks394.txt");
         }catch(Exception ioe){
             ioe.printStackTrace();
@@ -66,11 +67,10 @@ public class PairTrading {
 
             MatrixUtil.extractSubMatrix(dailyTradePrices, pairingSubMatrix, rowIndices, columnIndices);
             //normalize this matrix
-            pairingSubMatrix = normalize(pairingSubMatrix);
+            pairingSubMatrix = normalizeSB(pairingSubMatrix);
 
             if(row==0 || ((1+row)%pairComputingFrequency)==0){
                 pairsVector = findPairs(pairingSubMatrix, correlationStrategy);
-
             }
 
             pairsSet.add(pairsVector);
@@ -112,7 +112,7 @@ public class PairTrading {
 
     private DoubleMatrix resizeDistanceMatrix(DoubleMatrix distMatrix){
         DoubleMatrix oldDistMatrix = distMatrix.dup();
-        distMatrix.resize( distMatrix.rows + tradingWindow -1, distMatrix.columns);
+        distMatrix.resize(distMatrix.rows + tradingWindow - 1, distMatrix.columns);
         for(int i =0;i< oldDistMatrix.rows ; i++){
             for(int j =0;j < oldDistMatrix.columns ; j++){
                 distMatrix.put(i+tradingWindow-1,j,oldDistMatrix.get(i,j));
@@ -226,6 +226,70 @@ profitOut.totalProfitComb =sum(ProfitComb);
 
              //now copy this vector into the return matrix
             ret.putColumn(col, localVector);
+        }
+
+        return ret;
+    }
+
+
+    private List<Integer> createSkipColumnList(DoubleMatrix mat){
+        List<Integer> skipList = new ArrayList<Integer>();
+        DoubleMatrix colMatrix;
+        for(int i=0; i< mat.columns;i++){
+            colMatrix = mat.getColumn(i);
+            if(colMatrix.min()<0)
+                skipList.add(i);
+        }
+
+        return skipList;
+    }
+
+    public DoubleMatrix normalizeSB(DoubleMatrix mat){
+        List<Integer> skipList = createSkipColumnList(mat);
+
+        DoubleMatrix ret  = new DoubleMatrix(mat.rows, mat.columns);
+        DoubleMatrix ones = DoubleMatrix.ones(mat.rows);
+        //DoubleMatrix localVector = new DoubleMatrix(mat.rows,1);
+        double[] localVector  = new double[mat.rows];
+        DoubleMatrix temp  = new DoubleMatrix(mat.rows-1, 1), temp1 = new DoubleMatrix(mat.rows-1,1);
+
+        for(int col=0; col < mat.columns ; col++){
+            if(skipList.contains(col)){
+             //now copy this vector into the return matrix
+                ret.putColumn(col, MatrixUtil.getValueVector(mat.rows, Double.NaN));
+                continue;
+            }
+            MatrixUtil.extractSubMatrix(mat, temp, new int[]{1, mat.rows}, new int[]{col, col + 1});
+            MatrixUtil.extractSubMatrix(mat, temp1, new int[]{0, mat.rows - 1}, new int[]{col, col + 1});
+
+            temp = temp.sub(temp1);
+            double[][] tempMat = MatrixUtil.get2DMatrix(temp);
+            for(int i=0;i< tempMat.length ;i++){
+                //skip column if it contains -ve values
+                for(int j=0;j<tempMat[i].length;j++){
+                    //log.info("row " + row + " col = " + col);
+                    temp.put(i,j,tempMat[i][j]/temp1.get(i,j));
+                }
+            }
+            //log.info(temp.toString());
+            localVector[0] = 0.0;
+            //localVector.put(buildIndex(1, temp.rows+1),0,temp);
+            MatrixUtil.extractSubMatrix(temp, localVector, new int[]{0, temp.rows}, new int[]{0, 1}, 1, 0);
+            localVector = MatrixUtil.addOnes(localVector);
+            MathUtil.cumulativeProduct(localVector, skipList);
+            //ret.put(0,col,0.0);
+            //ret.put(buildIndex(1, temp.rows+1),col,temp);
+            //log.info(localVector.toString());
+            double mean = MatrixUtil.columnMeans(localVector, skipList);
+            //now find the std deviation
+            double standardDeviation = MathUtil.standardDeviation(localVector, mean, skipList);
+            //normalize again
+            for(int row=0; row<localVector.length;row++){
+                localVector[row] = (localVector[row] - mean)/standardDeviation;
+            }
+
+             //now copy this vector into the return matrix
+            ret.putColumn(col, new DoubleMatrix(localVector));
         }
 
         return ret;
