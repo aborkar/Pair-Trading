@@ -76,6 +76,10 @@ public class PairTrading {
             pairsSet.add(pairsVector);
 
             for(int col=0; col< pairingSubMatrix.columns ; col++){
+                if(pairsVector.get(col, 0) < 0){
+                    distMatrix.put(row,col, Double.NEGATIVE_INFINITY);
+                    continue;
+                }
                 distMatrix.put(row,col,pairingSubMatrix.get(pairingSubMatrix.rows-1,col)-pairingSubMatrix.get(pairingSubMatrix.rows-1,(int)pairsVector.get(col,0)));
             }
 
@@ -84,7 +88,9 @@ public class PairTrading {
             if(arr.length>0){
                 int col;
                 for(col=0;col< arr.length ;col++){
-                    if(row==0 || anyPos.get(row-1,arr[col])==0){
+                    if(pairsVector.get(arr[col],0) < 0)
+                        continue;
+                    if(row==0 || anyPos.get(row-1,arr[col])==0 ){
                         //set up the trade
                         log.info("Trading for pair: ["+ arr[col] + ","+ pairsVector.get(arr[col],0) + "] on " + row + " day " + ",obs num. " + (row + tradingWindow - 1) + " ..trade num: " + (tradesContainer.size() + 1));
                         //log.info("Trading indexes :" + Arrays.asList(arr).toString());
@@ -321,7 +327,7 @@ profitOut.totalProfitComb =sum(ProfitComb);
     }
 
     private DoubleMatrix findMostCorrelation(DoubleMatrix mat){
-        DoubleMatrix corrVector, retVectorCorrIndexes = new DoubleMatrix(mat.rows,1);
+        DoubleMatrix corrVector, retVectorCorrIndexes = MatrixUtil.getValueVector(mat.rows,-1);
         corrVector = mat.rowMins();
         for(int row=0; row < mat.rows;row++){
             for(int col = 0; col < mat.columns;col++){
@@ -363,11 +369,17 @@ profitOut.totalProfitComb =sum(ProfitComb);
      private ArrayList<Integer> resolveDuplicates(ArrayList<Integer> arr, DoubleMatrix pairsVector){
         ArrayList<Integer> otherIdx = MatrixUtil.ones(pairsVector, arr);
         for(int i=0; i < pairsVector.length;i++){
+            if(pairsVector.get(i, 0) < 0){
+                continue;
+            }
             if(i == (int)pairsVector.get((int)pairsVector.get(i,0),0)){
                 for(int j=0; j < arr.size();j++){
                     Integer idx = arr.get(j);
                     if(idx==Integer.MAX_VALUE)
                         continue;
+                    if(pairsVector.get(idx, 0) < 0){
+                        continue;
+                    }
                     if(idx == (int)pairsVector.get((int)pairsVector.get(idx,0),0)){
                         if(otherIdx.get(j).equals(1)){
                             arr.set(j,Integer.MAX_VALUE);

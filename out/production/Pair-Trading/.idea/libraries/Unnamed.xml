@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Unnamed">
     <CLASSES>
-      <root url="jar://$USER_HOME$/IdeaProjects/Pair-Trading/lib/jblas-1.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jblas-1.2.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

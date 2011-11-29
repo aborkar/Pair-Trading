@@ -3,6 +3,7 @@ package com.pairtrading.util;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -61,6 +62,41 @@ public class MatrixUtil {
                 destination.put(i_,j_,source.get(i,j));
             }
         }
+    }
 
+    public static void extractSubMatrix(DoubleMatrix source, double[] destination, int rowIndices[],
+                                        int columnIndices[], int destStartRow, int destStartColumn){
+        for(int i= rowIndices[0],i_ = destStartRow ; i < rowIndices[1] ;i++,i_++){
+//            for(int j= columnIndices[0],j_=destStartColumn; j < columnIndices[1] ;j++,j_++){
+                destination[i_]= source.get(i,0);
+//            }
+        }
+    }
+
+    public static double columnMeans(double[] localVector, List<Integer> skipList){
+        double cumSum = 0.0; int cumSumCount=0;
+        for(int i=0;i<localVector.length;i++){
+            if(skipList.contains(i)){
+                continue;
+            }
+            cumSum+=localVector[i];
+            cumSumCount++;
+        }
+        return cumSum/cumSumCount;
+    }
+
+    public static DoubleMatrix getValueVector(int rows, double value){
+        double[] vector = new double[rows];
+        for(int i=0 ; i < rows; i++){
+            vector[i]=value;
+        }
+        return new DoubleMatrix(vector);
+    }
+
+    public static double[] addOnes(double[] vector){
+        for(int i=0 ; i < vector.length; i++){
+            vector[i]+=1;
+        }
+        return vector;
     }
 }

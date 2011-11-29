@@ -3,6 +3,8 @@ package com.pairtrading.util;
 import com.pairtrading.PairTrading;
 import org.jblas.DoubleMatrix;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Sara
@@ -16,6 +18,16 @@ public class MathUtil {
             matrix.put(row,0,matrix.get(row-1,0) * matrix.get(row,0));
     }
 
+    public static void cumulativeProduct(double[] localVector, List<Integer> skipList){
+        for(int row=1;row < localVector.length; row++ ){
+            if(skipList.contains(row)){
+                localVector[row]=localVector[row-1];
+                continue;
+            }
+            localVector[row]*=localVector[row-1];
+        }
+    }
+
     public static double standardDeviation(DoubleMatrix matrix, double mean){
         double cumulativeSum=0.0;
         for(int row=0;row < matrix.rows; row++ ){
@@ -24,6 +36,21 @@ public class MathUtil {
         }
 
         return Math.pow(cumulativeSum/matrix.rows,0.5);
+    }
+
+
+    public static double standardDeviation(double[] localVector, double mean, List<Integer> skipList){
+        double cumulativeSum = 0.0; int countStdDev=0;
+        for(int row=0;row < localVector.length; row++ ){
+            if(skipList.contains(row)){
+                continue;
+            }
+            //PairTrading.log.fine("cumulativeSum :" + cumulativeSum + " next term: " + Math.pow((matrix.get(row, 0) - mean), 2));
+            cumulativeSum += Math.pow((localVector[row] - mean), 2);
+            countStdDev++;
+        }
+
+        return Math.pow(cumulativeSum/countStdDev,0.5);
     }
 
     public static double computeRegressionCoefficient(double[] x, double[] y){
@@ -51,4 +78,5 @@ public class MathUtil {
 
         return beta1;
     }
+
 }
