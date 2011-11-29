@@ -77,19 +77,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PairTrading.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="PairTrading.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/com/pairtrading/PairTrading.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="504" column="0" selection-start="19936" selection-end="19936" vertical-scroll-proportion="0.0">
+            <state line="65" column="24" selection-start="2801" selection-end="2801" vertical-scroll-proportion="0.28743544">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MatrixUtil.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MatrixUtil.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/com/pairtrading/util/MatrixUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="102" column="0" selection-start="3341" selection-end="3341" vertical-scroll-proportion="0.82828283">
+            <state line="81" column="39" selection-start="2854" selection-end="2854" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -118,9 +118,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/com/pairtrading/PairTrading.java" />
         <option value="$PROJECT_DIR$/com/pairtrading/util/MathUtil.java" />
         <option value="$PROJECT_DIR$/com/pairtrading/util/MatrixUtil.java" />
+        <option value="$PROJECT_DIR$/com/pairtrading/PairTrading.java" />
       </list>
     </option>
   </component>
@@ -396,7 +396,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-2" width="1296" height="776" extended-state="0" />
+    <frame x="-9" y="-2" width="1296" height="776" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -459,13 +459,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/com/pairtrading/PairTrading.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="504" column="0" selection-start="19936" selection-end="19936" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/com/pairtrading/util/MathUtil.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="82" column="0" selection-start="2697" selection-end="2697" vertical-scroll-proportion="0.0">
@@ -475,7 +468,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/com/pairtrading/util/MatrixUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="0" selection-start="3341" selection-end="3341" vertical-scroll-proportion="0.82828283">
+        <state line="81" column="39" selection-start="2854" selection-end="2854" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/com/pairtrading/PairTrading.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="65" column="24" selection-start="2801" selection-end="2801" vertical-scroll-proportion="0.28743544">
           <folding />
         </state>
       </provider>
