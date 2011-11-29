@@ -29,7 +29,6 @@ public class PairTrading {
     private static final int CORRELATION_METHODOLOGY_MIN_SQRD_DIST=1;
     private static final int CORRELATION_METHODOLOGY_LINEAR_REGRESSION=2;
 
-    //TODO: Max holding period defn
     int pairingInterval = 400;int tradingWindow=401;int pairComputingFrequency = 5;double tradingThreshold=1.5;
     int maxPeriod = 5; int correlationStrategy=CORRELATION_METHODOLOGY_MIN_SQRD_DIST;
     int numberOfTrades=0;
